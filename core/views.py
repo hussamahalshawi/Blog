@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from core.models import Blog
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 
 # Create your views here.
 def listing(request):
@@ -44,3 +45,9 @@ def private_place(request):
 @user_passes_test(lambda user: user.is_staff)
 def staff_place(request):
     return HttpResponse("Employees Only", content_type="text/plain")
+@login_required
+def add_messages(request):
+    username = request.user.username
+    messages.add_message(request, messages.INFO, f"Hello {username}")
+    messages.add_message(request, messages.WARNING, "DANGER")
+    return HttpResponse("Messages added", content_type="text/plain")
